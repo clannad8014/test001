@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" onclick="star(event)">
+ <head>
+  <title>miku消消乐</title>
+  <meta name="generator" content="editplus" charset="UTF-8"/>
+  <meta name="author" content="" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+   <style type="text/css">
+      
+   #span1{
+         border:1px solid gray;
+		 width:100px;
+         display:inline-block; /*行内块*/
+         height:20px;
+         overflow:hidden; /*隐藏进度条超出的部分*/
+   }
+   #span2{
+          display:inline-block;
+          width:0px;
+          height:20px;
+        }
+   @keyframes mykeyframes {
+    0%{opacity: 25}
+    50%{opacity: 50}
+    100%{opacity: 100}
+   }
+   #span2{
+    animation: mykeyframes 2s infinite;
+   }
+  </style>
+
+   <script type="text/javascript">
+   window.onload=init;
+	function init(){
+		document.body.bgColor="#ffffff";
+	}
+	
+	var count=0;//当前miku数量
+	var totlescore=0;//消除的个数
+    var gametime=0; //纪录游戏时长
+
+	//设置定时器开始
+	var timer; //miku定时器
+	var time//时间定时器
+	function start(){
+	  timer=window.setInterval("miku()",500);
+	   time=window.setInterval("counttime()",1000);
+	}
+
+	//暂停游戏
+	function gamestop(){
+	  //alert("暂停游戏");
+	  document.getElementById("img id").removeNode(true)
+	}
+
+   //游戏结束
+	function end(){
+		window.clearInterval(timer);//清除反复性定时器
+		window.clearInterval(time);//清除反复性定时器
+		alert("很遗憾游戏结束! \r\n得分："+totlescore*100+" \r\n游戏时长："+gametime+"秒");
+	 }
+    
+	//创建miku
+	function miku(){
+		//创建img标签
+		var obj=document.createElement("img");
+		obj.src="miku.jpg";
+
+		var w=Math.floor(Math.random()*(120+1))+60;
+		obj.width=w;
+		
+		//鼠标点击出现
+		//var x=e.clientX;
+		//var y=e.clientY;
+
+		//设置随机出现位置
+		var x=Math.floor(Math.random()*1600)+30;//鼠标x的位置
+	    var y=Math.floor(Math.random()*800)+30;//鼠标y的位置
+		obj.style.position="absolute";//绝对定位
+		//设置鼠标的位置
+		obj.style.top=y+"px";
+		obj.style.left=x+"px";
+
+
+		/*放置标签 将obj加到body中 document.body.appendChild();
+		  appendChild添加子标签
+		*/
+		document.body.appendChild(obj);
+
+		/*给对象绑定事件 （生成miku）
+		 注意：函数名后不加括号
+		*/
+		obj.onclick=removemiku;
+
+	  count++; //纪录当前miku个数
+	  countmiku();
+	  
+	  //进度条
+	  document.getElementById("span2").style.width=count*5+"px";
+      document.getElementById("span2").style.backgroundColor="#ccffff";
+
+	}
+
+	//消除miku 即移除标签(img)
+	function removemiku(){
+		//this.parentNode(获得对象父节点)  removeChild(删除子节点)
+		this.parentNode.removeChild(this);
+	     count--;
+		 totlescore++;
+		  countmiku();
+	}
+
+	//miku个数判断
+	function countmiku(){
+		var number=document.getElementById("count");
+		var  score=document.getElementById("sco");
+		number.innerHTML="当前miku数量："+count+" ";
+		   score.innerHTML="当前分数:"+totlescore*100;
+		if(count>20){
+		  end();
+		}
+	}
+	//记录游戏时间
+	function counttime(){
+		var time=document.getElementById("time");
+		gametime++;
+		time.innerHTML=" 游戏时长："+gametime+"秒";
+	}
+   </script>
+ </head>
+<input type="button" value="开始游戏" onclick="start()">
+<input type="button" value="暂停游戏" onclick="gamestop()">
+<span id="count"> 当前miku数量：0</span>
+<span id="sco"> 当前分数：0</span>
+<span id="time"> 游戏时长：0秒</span>
+<span id="span1"><span id="span2"></span></span>
+ <body >
+ </body>
+</html>
